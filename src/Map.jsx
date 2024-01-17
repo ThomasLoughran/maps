@@ -11,14 +11,20 @@ import {
 
 import RoutingControl from './RoutingControl'
 
-const maps = {
-  base: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-};
-
 const Map = () => {
   const [map, setMap] = useState(null);
   const [start, setStart] = useState([38.9072, -77.0369])
   const [end, setEnd] = useState([37.7749, -122.4194])
+  const [showRoutingControl, setShowRoutingControl] = useState(true);
+
+  const maps = {
+    base: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  };
+
+  const toggleRoutingControl = () => {
+    setShowRoutingControl(!showRoutingControl);
+  };
+  
 
   return (
     <>
@@ -26,18 +32,19 @@ const Map = () => {
         center={[37.0902, -95.7129]}
         zoom={3}
         zoomControl={false}
-        style={{ height: "100vh", width: "100%", padding: 0 }}
+        style={{ height: "80vh", width: "100%", padding: 0 }}
         whenCreated={map => setMap(map)}
       >
+        
         {/* *************** */}
         {/* Pass in our custom control layer here, inside of the map container */}
         {/* *************** */}
-        <RoutingControl 
+        {showRoutingControl && <RoutingControl 
           position={'topleft'} 
           start={start} 
           end={end} 
           color={'#757de8'} 
-        />
+        />}
         <LayersControl position="topright">
           <LayersControl.BaseLayer checked name="Map">
             <TileLayer
@@ -47,6 +54,9 @@ const Map = () => {
           </LayersControl.BaseLayer>
         </LayersControl>
       </MapContainer>
+      <button onClick={toggleRoutingControl}>
+            {showRoutingControl ? "Hide Routing Control" : "Show Routing Control"}
+      </button>
     </>
   );
 };
